@@ -1,3 +1,4 @@
 # Projekt Grupowy 
 * Aleksander Śmiałowski 
- * Pola Nienajadlo 
+* Pola Nienajadlo
+* i tyle
