@@ -1,3 +1,3 @@
 # Projekt Grupowy 
-Aleksander Śmiałowski 
-Pola Nienajadlo 
+* Aleksander Śmiałowski 
+ * Pola Nienajadlo 
