@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from .models import Dog, Cat, User, Money_collection, Shelter, Cage
 
+# ADMIN ROZPISKA
 
 class DogAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'rasa_psa', 'SIZE']  
