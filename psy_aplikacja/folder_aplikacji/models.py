@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.exceptions import ValidationError
+from django.utils.timezone import now
 
 # Create your models here.
 # duzo modeli wzietych z dokumentacji bodajze lab 04
@@ -15,7 +17,8 @@ SIZE = (
 AGE_CHOICES =[
     ('kitten', 'Kociak'),
     ('puppy', 'Szczeniak'),
-    ('age', 'Wiek')
+    ('age', 'Wiek'),
+    ('adult', 'dorosly')
 ]
 
 CASTRATED_CHOICES =[
@@ -23,12 +26,17 @@ CASTRATED_CHOICES =[
     ('NO','NIE')
 ]
 
+STATUS_CHOICES = [
+    ('free', 'Wolna'),
+    ('occupied', 'Zajęta')
+]
+
 class Dog(models.Model):
 
     image = models.ImageField(upload_to='images/') #zdjecir zwierzaka
     name = models.CharField(max_length=60) #imie psa
     rasa_psa = models.CharField(max_length=60) # rasa psa
-    SIZE = models.CharField(max_length=1, choices=SIZE, default=SIZE[0][0]) #wielkosc psa
+    SIZE = models.CharField(max_length=1,choices=SIZE, default=SIZE[0][0]) #wielkosc psa
     month_added = models.IntegerField(choices=MONTHS.choices, default=MONTHS.choices[0][0]) #miesiac dodania ogloszenia
     team = models.CharField(max_length=60, default="") #gotowy do adopcji lub nie 
     age_type = models.CharField(max_length=10, choices=AGE_CHOICES, default='age') #wiek typ
@@ -50,17 +58,17 @@ class Cat(models.Model):
     opis = models.TextField(blank = True, null= True) # hisotria zwierzaka
 
 
-
-
     def __str__(self):
         if self.age_type == 'puppy' :
             return "Szczeniak"
         if self.age_type == 'kitten' :
             return "Kociak"
+        if self.age_type == 'adult' :
+            return
         return f"Wiek: {self.age} lat"
 
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.image}'
     
 class User(models.Model) :
     name = models.CharField(max_length=60)
@@ -83,9 +91,15 @@ class Shelter(models.Model):
     name = models.CharField(max_length=100)  # nazwada schroniska
     location = models.CharField(max_length=200)  # gdzie sie znajduje 
     capacity = models.IntegerField()  # jak duzo zwierzat zmiesci dane schronisko 
+    #_____ulepszenie modelu______ jazdaaaaaaaaa
+    created = models.DateTimeField(default=now)
+    updated = models.DateTimeField(default=now)
 
+    def available_capacity(self):  # ten def robi to ze pokazuje ile mamy klatek dostepnych 
+        return self.capacity - self.cages.count()
+    
     def __str__(self):
-        return self.name
+        return f"{self.name} - Wolne miejsce: {self.available_capacity()}"
 
 #teraz najtrudniejsze zadanie zrobic klatki i przypisanie ich 
 
@@ -106,9 +120,19 @@ class Cage(models.Model):
         null=True,
         related_name="cat_cage"
     )
-
+    #ulepszenie
+    created = models.DateTimeField(default=now)
+    updated = models.DateTimeField(default=now)
+    
+    def is_empty(self): # wolna klatka ?
+        return not self.dog and not self.cat
+    
+    def war(self): # czy nie bedzie wojny ;)
+        if self.dog and self.cat:
+            raise ValidationError('W klatce nie moze jednoczenie przebywac kot z psem')
+    
     def __str__(self):
-        return f"Klatka {self.cage_id} w schronisku {self.shelter.name}"
+        return f"Klatka {self.cage_id} w {self.shelter.name}"
 
 
 
