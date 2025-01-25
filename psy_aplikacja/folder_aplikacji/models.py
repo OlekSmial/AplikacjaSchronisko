@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
+from django.core.validators import EmailValidator
 
 # Create your models here.
 # duzo modeli wzietych z dokumentacji bodajze lab 04
@@ -23,7 +24,8 @@ AGE_CHOICES =[
 
 CASTRATED_CHOICES =[
     ('YES','TAK'),
-    ('NO','NIE')
+    ('NO','NIE'),
+    ("",'Nie podano'),
 ]
 
 STATUS_CHOICES = [
@@ -33,9 +35,9 @@ STATUS_CHOICES = [
 
 class Dog(models.Model):
 
-    image = models.ImageField(upload_to='images/') #zdjecir zwierzaka
+    image = models.ImageField(upload_to='images/', blank=True, null=True) #zdjecir zwierzaka
     name = models.CharField(max_length=60) #imie psa
-    rasa_psa = models.CharField(max_length=60) # rasa psa
+    rasa_psa = models.CharField(max_length=60, blank=True) # rasa psa
     SIZE = models.CharField(max_length=1,choices=SIZE, default=SIZE[0][0]) #wielkosc psa
     month_added = models.IntegerField(choices=MONTHS.choices, default=MONTHS.choices[0][0]) #miesiac dodania ogloszenia
     team = models.CharField(max_length=60, default="") #gotowy do adopcji lub nie 
@@ -46,9 +48,9 @@ class Dog(models.Model):
 
 class Cat(models.Model):
 
-    image = models.ImageField(upload_to='images/') # zdjecie zwierzaka
+    image = models.ImageField(upload_to='images/', blank=True, null=True) # zdjecie zwierzaka
     name = models.CharField(max_length=60) #imie kota
-    rasa_kota = models.CharField(max_length=60) # rasa kota
+    rasa_kota = models.CharField(max_length=60, blank=True) # rasa kota
     SIZE = models.CharField(max_length=1, choices=SIZE, default=SIZE[0][0]) #wielkosc kota
     month_added = models.IntegerField(choices=MONTHS.choices, default=MONTHS.choices[0][0]) #miesiac dodania ogloszenia
     team = models.CharField(max_length=60, default="") #gotowy do adopcji lub nie 
@@ -73,7 +75,7 @@ class Cat(models.Model):
 class User(models.Model) :
     name = models.CharField(max_length=60)
     team_people = models.CharField(max_length=60, default="") # pracownik czy user zwykly
-    email = models.EmailField(unique=True) # adres email
+    email = models.EmailField(unique=True, validators=[EmailValidator(message="Wpisz poprawny adres email")]) # adres email
 
     def __str__(self):
         return self.name
