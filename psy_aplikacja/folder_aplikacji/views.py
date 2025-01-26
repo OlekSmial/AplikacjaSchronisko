@@ -4,13 +4,15 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from rest_framework.decorators import parser_classes
+from django.http import HttpResponse
+import datetime
 from .models import Dog, Cat, Osoba, Money_collection, Shelter, Cage
 from .serializers import DogSerializer, CatSerializer, OsobaSerializer, Money_collectionSerializer, ShelterSerializer, CageSerializer
 
 
 #DLA PSA
 # określamy dostępne metody żądania dla tego endpointu
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @parser_classes([JSONParser, FormParser, MultiPartParser])
 def dog_list(request):
     """
@@ -20,6 +22,13 @@ def dog_list(request):
         dogs = Dog.objects.all()
         serializer = DogSerializer(dogs, many=True)
         return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = DogSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -246,6 +255,27 @@ def cage_detail(request, pk):
     elif request.method == 'DELETE':
         cage.delete()
         return Response(status= status.HTTP_204_NO_CONTENT)
+
+def welcome_view(request):
+    now = datetime.datetime.now()
+    html = f"""
+        <html><body>
+        Witamy w Schronisku </br>
+        Aktualna data i czas na serwerze: {now}.
+        </body></html>"""
+    return HttpResponse(html)
+
+def dog_list_html(request):
+    dogs = Dog.objects.all()
+    return render(request, 'folder_aplikacji/dog/list.html', {'dogs': dogs})
+
+def dog_detail_html(request, pk):
+    dog = Dog.objects.get(id=pk)
+    return render(request,
+                  "folder_aplikacji/dog/detail.html",
+                  {'dog': dog})
+    
+
 
 
 

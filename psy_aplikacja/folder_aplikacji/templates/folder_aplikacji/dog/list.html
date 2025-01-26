@@ -1,0 +1,39 @@
+{% extends "folder_aplikacji/base.html" %}
+
+{% block title %}
+    Lista Psów
+{% endblock %}
+
+{% block content %}
+<h1>Lista Psów w Schronisku</h1>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Zdjęcie</th>
+            <th>Imię</th>
+            <th>Rasa</th>
+            <th>Historia</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dog in dogs %}
+        <tr>
+            <td>
+                {% if dog.image %}
+                    <img src="{{ dog.image.url }}" alt="{{ dog.name }}" width="100">
+                {% else %}
+                    Brak zdjęcia
+                {% endif %}
+            </td>
+            <td>{{ dog.name }}</td>
+            <td>{{ dog.rasa_psa }}</td>
+            <td>{{ dog.opis }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Brak psów do wyświetlenia.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
