@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Dog, Cat, User, Money_collection, Shelter, Cage
+from .models import Dog, Cat, Osoba, Money_collection, Shelter, Cage
 
 # ADMIN ROZPISKA
 
@@ -15,7 +15,7 @@ class CatAdmin(admin.ModelAdmin):
     search_fields = ['id']
     list_filter = ['SIZE', 'castrated', 'age', 'rasa_kota']   
 
-class UserAdmin(admin.ModelAdmin):
+class OsobaAdmin(admin.ModelAdmin):
     list_display = ['name', 'team_people', 'email']  
    
 class MoneyCollectionAdmin(admin.ModelAdmin):
@@ -33,7 +33,7 @@ class CageAdmin(admin.ModelAdmin):
 
 admin.site.register(Dog, DogAdmin)
 admin.site.register(Cat, CatAdmin)
-admin.site.register(User, UserAdmin)
+admin.site.register(Osoba, OsobaAdmin)
 admin.site.register(Money_collection, MoneyCollectionAdmin)
 admin.site.register(Shelter, ShelterAdmin)
 admin.site.register(Cage, CageAdmin)
