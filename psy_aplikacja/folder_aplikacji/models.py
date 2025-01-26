@@ -72,7 +72,7 @@ class Cat(models.Model):
     def __str__(self):
         return f'{self.name} {self.image}'
     
-class User(models.Model) :
+class Osoba(models.Model) :
     name = models.CharField(max_length=60)
     team_people = models.CharField(max_length=60, default="") # pracownik czy user zwykly
     email = models.EmailField(unique=True, validators=[EmailValidator(message="Wpisz poprawny adres email")]) # adres email
@@ -82,7 +82,7 @@ class User(models.Model) :
 
 class Money_collection(models.Model) :
     name = models.CharField(max_length=100) # cel zbiorki 
-    image = models.ImageField(upload_to='images/')
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
     opis = models.TextField(blank = True, null= True) #  opis np dlacego zbieramy po co ?
     price = models.DecimalField(max_digits=10, decimal_places=2) #  ile kasy potrzebujemy  
 
@@ -90,12 +90,11 @@ class Money_collection(models.Model) :
         return f'{self.name} {self.image}'
     
 class Shelter(models.Model):
-    name = models.CharField(max_length=100)  # nazwada schroniska
-    location = models.CharField(max_length=200)  # gdzie sie znajduje 
-    capacity = models.IntegerField()  # jak duzo zwierzat zmiesci dane schronisko 
-    #_____ulepszenie modelu______ jazdaaaaaaaaa
-    created = models.DateTimeField(default=now)
-    updated = models.DateTimeField(default=now)
+    name = models.CharField(max_length=100)  
+    location = models.CharField(max_length=200, blank=True, null=True) 
+    capacity = models.IntegerField(default=0)  
+    created = models.DateTimeField(auto_now_add=True)  
+    updated = models.DateTimeField(auto_now=True)
 
     def available_capacity(self):  # ten def robi to ze pokazuje ile mamy klatek dostepnych 
         return self.capacity - self.cages.count()
@@ -132,6 +131,19 @@ class Cage(models.Model):
     def war(self): # czy nie bedzie wojny ;)
         if self.dog and self.cat:
             raise ValidationError('W klatce nie moze jednoczenie przebywac kot z psem')
+        
+    def save(self, *args, **kwargs):
+        if self.shelter and self.pk is None:  
+            self.shelter.capacity -= 1
+            self.shelter.save()
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.shelter:
+            self.shelter.capacity += 1
+            self.shelter.save()
+        super().delete(*args, **kwargs)
+
     
     def __str__(self):
         return f"Klatka {self.cage_id} w {self.shelter.name}"

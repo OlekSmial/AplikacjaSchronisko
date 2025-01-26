@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Dog, Cat, User, Money_collection, Shelter, Cage, MONTHS, SIZE, AGE_CHOICES, CASTRATED_CHOICES
+from .models import Dog, Cat, Osoba, Money_collection, Shelter, Cage, MONTHS, SIZE, AGE_CHOICES, CASTRATED_CHOICES
 from django.core.validators import EmailValidator
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.db import models
 
 
@@ -85,10 +86,11 @@ class CatSerializer(serializers.Serializer):
         return instance
     
 #USER
-class UserSerializer(serializers.ModelSerializer):
-    model = User
-    fields = ['id', 'name', 'team_people','email']
-    read_only_fields = ['id']
+class OsobaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Osoba
+        fields = ['id', 'name', 'team_people','email']
+        read_only_fields = ['id']
 # walidacja wartości pola name
     def validate_name(self, value):
 
@@ -102,21 +104,26 @@ class UserSerializer(serializers.ModelSerializer):
 
 #ZBIORKA
 class Money_collectionSerializer(serializers.ModelSerializer):
-    model = Money_collection
-    fields = ['id', 'name', 'image', 'opis', 'price']
-    read_only_fields = ['id']
+    class Meta:
+        model = Money_collection
+        fields = ['id', 'name', 'image', 'opis', 'price']
+        read_only_fields = ['id']
 
 # schronisko 
 class ShelterSerializer(serializers.ModelSerializer):
-    model = Shelter
-    fields = ['id', 'name', 'location', 'capacity', 'created', 'updated']
-    read_only_fields = ['id']
+    class Meta:
+        model = Shelter
+        fields = ['id', 'name', 'location', 'capacity', 'created', 'updated']  
+        read_only_fields = ['id', 'created', 'updated']  
+
 
 #klatka
 class CageSerializer(serializers.ModelSerializer):
-    model = Cage
-    fields = ['id', 'cage_id', 'cat', 'dog', 'shelter', 'created', 'updated']
-    read_only_fields = ['id']
+    class Meta:
+        model = Cage
+        fields = ['id', 'cage_id', 'cat', 'dog', 'shelter', 'created', 'updated']
+        read_only_fields = ['id', 'created', 'updated']
+
 
 
 
