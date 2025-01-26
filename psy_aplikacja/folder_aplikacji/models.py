@@ -46,6 +46,9 @@ class Dog(models.Model):
     castrated = models.CharField(max_length=10, choices=CASTRATED_CHOICES, default="") #czy pies jest wykastrowany
     opis = models.TextField(blank = True, null= True) #historia zwierzaka
 
+    def __str__(self):
+        return f'{self.name} {self.image}'
+
 class Cat(models.Model):
 
     image = models.ImageField(upload_to='images/', blank=True, null=True) # zdjecie zwierzaka

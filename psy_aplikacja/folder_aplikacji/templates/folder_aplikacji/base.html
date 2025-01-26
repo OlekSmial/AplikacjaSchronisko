@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{% static "css/folder_aplikacji.css" %}" rel="stylesheet">
+    </head>
+    <body>
+        <div id="header" >
+            <h1> Projekt Schronisko </h1>   
+        </div>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div id="sidebar">
+            <p>Kontakt 112</p>
+        </div>
+    </body>
+</html>

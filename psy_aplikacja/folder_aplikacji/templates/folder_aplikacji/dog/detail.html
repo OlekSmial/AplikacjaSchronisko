@@ -1,0 +1,19 @@
+{% extends "folder_aplikacji/base.html" %}
+
+{% block title %}
+    Szczegóły psa: {{ dog.name }}
+{% endblock %}
+
+{% block content %}
+    <h1>Szczegóły psa</h1>
+    <ul>
+        <li><strong>Zdjęcie:</strong> {% if dog.image %}<img src="{{ dog.image.url }}" alt="{{ dog.name }}" width="200">{% else %}Brak zdjęcia{% endif %}</li>
+        <li><strong>Imię:</strong> {{ dog.name }}</li>
+        <li><strong>Rasa:</strong> {{ dog.rasa_psa }}</li>
+        <li><strong>Opis:</strong> {{ dog.opis }}</li>
+        <li><strong>Wielkość:</strong> {{ dog.size }}</li>
+        <li><strong>Miesiąc dodania:</strong> {{ dog.month_added }}</li>
+        <li><strong>Drużyna:</strong> {{ dog.team }}</li>
+        <li><strong>Status:</strong> {{ dog.get_status_display }}</li>
+    </ul>
+{% endblock %}
