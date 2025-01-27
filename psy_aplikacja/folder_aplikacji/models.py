@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 from django.core.validators import EmailValidator
+from django.contrib.auth.models import User
 
 # Create your models here.
 # duzo modeli wzietych z dokumentacji bodajze lab 04
@@ -79,6 +80,7 @@ class Osoba(models.Model) :
     name = models.CharField(max_length=60)
     team_people = models.CharField(max_length=60, default="") # pracownik czy user zwykly
     email = models.EmailField(unique=True, validators=[EmailValidator(message="Wpisz poprawny adres email")]) # adres email
+    boss = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name

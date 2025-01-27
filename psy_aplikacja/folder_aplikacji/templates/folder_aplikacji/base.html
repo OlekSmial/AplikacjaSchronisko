@@ -16,5 +16,8 @@
         <div id="sidebar">
             <p>Kontakt 112</p>
         </div>
+        {% if perms.folder_aplikacji.delete_dog %}
+        <button>Delete</button>
+        {% endif %}
     </body>
 </html>
